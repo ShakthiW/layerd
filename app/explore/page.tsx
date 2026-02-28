@@ -1,0 +1,39 @@
+"use client";
+
+import { useState } from "react";
+import { ExploreHero } from "@/components/explore/explore-hero";
+import { FeaturedDrop } from "@/components/explore/featured-drop";
+import { ExploreFilters } from "@/components/explore/explore-filters";
+import { ProductGrid } from "@/components/explore/product-grid";
+import { Footer } from "@/components/home/footer";
+
+export default function ExplorePage() {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeSort, setActiveSort] = useState("newest");
+
+  return (
+    <div className="grain-overlay">
+      <main>
+        {/* Section 1: Explore Hero */}
+        <ExploreHero />
+
+        {/* Section 2: Featured Drop */}
+        <FeaturedDrop />
+
+        {/* Section 3: Filters & Sort */}
+        <ExploreFilters
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          activeSort={activeSort}
+          onSortChange={setActiveSort}
+        />
+
+        {/* Section 4: Product Grid */}
+        <ProductGrid activeCategory={activeCategory} activeSort={activeSort} />
+      </main>
+
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
+}
