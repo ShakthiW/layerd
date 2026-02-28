@@ -4,7 +4,6 @@ import { Product } from "@/lib/products";
 import { ProductHero } from "@/components/product/product-hero";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductStory } from "@/components/product/product-story";
-import { ProductOptions } from "@/components/product/product-options";
 import { ProductCustomizer } from "@/components/product/product-customizer";
 import { ProductSpecs } from "@/components/product/product-specs";
 import { ProductReviews } from "@/components/product/product-reviews";
@@ -24,10 +23,7 @@ export function ProductPage({ product }: { product: Product }) {
         {/* Section 3: Editorial Story — "This wasn't bought. It was built." */}
         <ProductStory product={product} />
 
-        {/* Section 4: Options — "Make It Yours" */}
-        <ProductOptions product={product} />
-
-        {/* Section 5: Customizer (only for customizable products) */}
+        {/* Section 4: Customizer (only for customizable products) */}
         <ProductCustomizer product={product} />
 
         {/* Section 6: Specs — "The Blueprint" */}
