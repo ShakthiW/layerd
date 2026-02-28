@@ -3,121 +3,8 @@
 import { useRef, useMemo, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { ShoppingBag, Star, ArrowRight } from "lucide-react";
-
-const allProducts = [
-  {
-    name: "Geometric Desk Organizer",
-    category: "Desk & Organization",
-    price: 3500,
-    rating: 4.9,
-    reviews: 47,
-    gradient: "from-blue-500/10 to-cyan-500/5",
-    date: "2026-02-20",
-  },
-  {
-    name: "Gojo Satoru Figure",
-    category: "Anime Inspired",
-    price: 5200,
-    rating: 5.0,
-    reviews: 82,
-    gradient: "from-purple-500/10 to-pink-500/5",
-    date: "2026-02-25",
-  },
-  {
-    name: "F1 Helmet Replica Stand",
-    category: "F1 Designs",
-    price: 4800,
-    rating: 4.8,
-    reviews: 31,
-    gradient: "from-red-500/10 to-orange-500/5",
-    date: "2026-02-18",
-  },
-  {
-    name: "Minimalist Vase Collection",
-    category: "Interior & Lifestyle",
-    price: 2900,
-    rating: 4.7,
-    reviews: 56,
-    gradient: "from-amber-500/10 to-yellow-500/5",
-    date: "2026-01-28",
-  },
-  {
-    name: "Tanjiro Kamado Bust",
-    category: "Anime Inspired",
-    price: 6800,
-    rating: 4.9,
-    reviews: 64,
-    gradient: "from-emerald-500/10 to-cyan-500/5",
-    date: "2026-02-22",
-  },
-  {
-    name: "Cable Management Tower",
-    category: "Desk & Organization",
-    price: 2200,
-    rating: 4.6,
-    reviews: 39,
-    gradient: "from-slate-500/10 to-zinc-500/5",
-    date: "2026-02-10",
-  },
-  {
-    name: "McLaren MCL60 Model",
-    category: "F1 Designs",
-    price: 7500,
-    rating: 5.0,
-    reviews: 28,
-    gradient: "from-orange-500/10 to-amber-500/5",
-    date: "2026-02-27",
-  },
-  {
-    name: "Hexagonal Wall Planter",
-    category: "Interior & Lifestyle",
-    price: 1800,
-    rating: 4.5,
-    reviews: 71,
-    gradient: "from-green-500/10 to-emerald-500/5",
-    date: "2026-01-15",
-  },
-  {
-    name: "Custom Name Plate Stand",
-    category: "Custom",
-    price: 3200,
-    rating: 4.8,
-    reviews: 93,
-    gradient: "from-pink-500/10 to-rose-500/5",
-    date: "2026-02-14",
-  },
-  {
-    name: "Spirited Away Diorama",
-    category: "Anime Inspired",
-    price: 8900,
-    rating: 5.0,
-    reviews: 45,
-    gradient: "from-indigo-500/10 to-blue-500/5",
-    date: "2026-02-26",
-  },
-  {
-    name: "Viral Fidget Cube Pro",
-    category: "Trending",
-    price: 1500,
-    rating: 4.7,
-    reviews: 214,
-    gradient: "from-fuchsia-500/10 to-purple-500/5",
-    date: "2026-02-28",
-  },
-  {
-    name: "Modular Headphone Hook",
-    category: "Desk & Organization",
-    price: 2800,
-    rating: 4.9,
-    reviews: 58,
-    gradient: "from-cyan-500/10 to-sky-500/5",
-    date: "2026-02-12",
-  },
-];
-
-function formatPrice(price: number) {
-  return `LKR ${price.toLocaleString()}`;
-}
+import Link from "next/link";
+import { allProducts, formatPrice } from "@/lib/products";
 
 export function ProductGrid({
   activeCategory,
@@ -196,47 +83,49 @@ export function ProductGrid({
               }}
               className="group cursor-pointer"
             >
-              {/* Product image */}
-              <div
-                className={`relative mb-5 aspect-4/5 overflow-hidden rounded-2xl border border-white/6 bg-linear-to-br ${product.gradient} transition-all duration-700 group-hover:border-warm-gold/20 group-hover:shadow-[0_8px_40px_rgba(212,168,83,0.06)]`}
-              >
-                {/* Geometric placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative">
-                    <div className="h-20 w-20 rounded-2xl border border-white/10 bg-white/3 transition-transform duration-700 group-hover:rotate-12 group-hover:scale-110" />
-                    <div className="absolute left-4 top-4 h-20 w-20 rounded-2xl border border-white/6 bg-white/2 transition-transform duration-700 group-hover:-rotate-6" />
+              <Link href={`/product/${product.slug}`}>
+                {/* Product image */}
+                <div
+                  className={`relative mb-5 aspect-4/5 overflow-hidden rounded-2xl border border-white/6 bg-linear-to-br ${product.gradient} transition-all duration-700 group-hover:border-warm-gold/20 group-hover:shadow-[0_8px_40px_rgba(212,168,83,0.06)]`}
+                >
+                  {/* Geometric placeholder */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative">
+                      <div className="h-20 w-20 rounded-2xl border border-white/10 bg-white/3 transition-transform duration-700 group-hover:rotate-12 group-hover:scale-110" />
+                      <div className="absolute left-4 top-4 h-20 w-20 rounded-2xl border border-white/6 bg-white/2 transition-transform duration-700 group-hover:-rotate-6" />
+                    </div>
                   </div>
-                </div>
 
-                {/* Quick add */}
-                <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                  <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/90 py-2.5 text-xs font-semibold uppercase tracking-wider text-black backdrop-blur-sm transition-colors hover:bg-white">
-                    <ShoppingBag className="h-3.5 w-3.5" />
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-
-              {/* Product info */}
-              <div className="space-y-1.5 px-0.5">
-                <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-600">
-                  {product.category}
-                </span>
-                <h3 className="text-sm font-medium text-white transition-colors group-hover:text-warm-gold">
-                  {product.name}
-                </h3>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-warm-gold">
-                    {formatPrice(product.price)}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <Star className="h-3 w-3 fill-warm-gold text-warm-gold" />
-                    <span className="text-xs text-zinc-500">
-                      {product.rating} ({product.reviews})
+                  {/* Quick add */}
+                  <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                    <span className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/90 py-2.5 text-xs font-semibold uppercase tracking-wider text-black backdrop-blur-sm transition-colors hover:bg-white">
+                      <ArrowRight className="h-3.5 w-3.5" />
+                      View Object
                     </span>
                   </div>
                 </div>
-              </div>
+
+                {/* Product info */}
+                <div className="space-y-1.5 px-0.5">
+                  <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-600">
+                    {product.category}
+                  </span>
+                  <h3 className="text-sm font-medium text-white transition-colors group-hover:text-warm-gold">
+                    {product.name}
+                  </h3>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-warm-gold">
+                      {formatPrice(product.price)}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <Star className="h-3 w-3 fill-warm-gold text-warm-gold" />
+                      <span className="text-xs text-zinc-500">
+                        {product.rating} ({product.reviews})
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>
