@@ -16,11 +16,11 @@ import {
 
 export function Navbar() {
   return (
-    <nav className="sticky top-0 z-50 w-full px-4 py-3 md:px-8">
+    <nav className="sticky top-0 z-50 w-full px-4 py-3 md:px-8 bg-black/60 backdrop-blur-xl border-b border-white/4">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         {/* Logo — Left */}
         <Link href="/" className="flex shrink-0 items-center">
-          <span className="text-lg font-bold uppercase tracking-widest text-black dark:text-white">
+          <span className="font-display text-lg font-bold uppercase tracking-widest text-white">
             Layerd
           </span>
         </Link>
@@ -31,7 +31,7 @@ export function Navbar() {
         </div>
 
         {/* Actions — Right */}
-        <div className="flex items-center gap-1 rounded-full border-2 border-black bg-white p-1 dark:border-white dark:bg-black md:gap-2">
+        <div className="flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1 backdrop-blur-sm md:gap-2">
           {/* Cart */}
           <Button
             variant="ghost"
@@ -58,7 +58,7 @@ export function Navbar() {
                 className="rounded-full"
                 aria-label="User menu"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black/20 bg-gradient-to-br from-cyan-400 to-purple-500 dark:border-white/20">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black/20 bg-linear-to-br from-cyan-400 to-purple-500 dark:border-white/20">
                   <User className="h-4 w-4 text-white" />
                 </div>
               </Button>
