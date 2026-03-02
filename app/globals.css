@@ -268,3 +268,43 @@ html {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Custom range slider — warm-gold theme */
+.custom-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+}
+.custom-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d4a853;
+  border: 2px solid #1a1a2e;
+  box-shadow: 0 0 10px rgba(212, 168, 83, 0.3);
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+.custom-range-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 20px rgba(212, 168, 83, 0.5);
+}
+.custom-range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d4a853;
+  border: 2px solid #1a1a2e;
+  box-shadow: 0 0 10px rgba(212, 168, 83, 0.3);
+  cursor: pointer;
+}
+.custom-range-slider::-moz-range-track {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+}
