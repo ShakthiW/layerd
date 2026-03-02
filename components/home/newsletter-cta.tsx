@@ -28,9 +28,9 @@ export function NewsletterCTA() {
       <div className="section-divider absolute top-0 left-0 right-0" />
 
       {/* Background glow */}
-      <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(212,168,83,0.06)_0%,transparent_60%)]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(212,168,83,0.06)_0%,transparent_60%)]" />
 
-      <div className="mx-auto max-w-2xl px-6 text-center md:px-12">
+      <div className="relative z-10 mx-auto max-w-2xl px-6 text-center md:px-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
