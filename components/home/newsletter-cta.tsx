@@ -9,13 +9,36 @@ export function NewsletterCTA() {
   const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    if (!email) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to subscribe");
+      }
+
       setSubmitted(true);
       setTimeout(() => setSubmitted(false), 3000);
       setEmail("");
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -105,7 +128,11 @@ export function NewsletterCTA() {
           transition={{ delay: 0.8, duration: 0.8 }}
           className="mt-4 text-xs text-zinc-700"
         >
-          No spam, ever. Unsubscribe anytime.
+          {error ? (
+            <span className="text-red-500/80">{error}</span>
+          ) : (
+            "No spam, ever. Unsubscribe anytime."
+          )}
         </motion.p>
       </div>
     </section>

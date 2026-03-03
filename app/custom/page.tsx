@@ -7,6 +7,10 @@ import {
   type CreationData,
 } from "@/components/custom/creation-methods";
 import { PricingCalculator } from "@/components/custom/pricing-calculator";
+import {
+  CustomerDetails,
+  type CustomerData,
+} from "@/components/custom/customer-details";
 import { CustomCTA } from "@/components/custom/custom-cta";
 import { Footer } from "@/components/home/footer";
 
@@ -28,13 +32,63 @@ export default function CustomPage() {
   const [weightGrams, setWeightGrams] = useState(100);
   const [printTimeHours, setPrintTimeHours] = useState(4);
 
-  const handleSubmit = () => {
-    // Future: send data to backend
-    console.log("Quote requested:", {
-      ...creationData,
-      weightGrams,
-      printTimeHours,
-    });
+  // Customer details
+  const [customerData, setCustomerData] = useState<CustomerData>({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const handleSubmit = async () => {
+    // Basic validation
+    if (!customerData.name || !customerData.email) {
+      setSubmitError("Please provide your name and email.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const payload = {
+      customerDetails: customerData,
+      creationData: {
+        method: creationData.method,
+        description: creationData.description,
+        dimensions: creationData.dimensions,
+        notes: creationData.notes,
+        material: creationData.material,
+        finish: creationData.finish,
+        quantity: creationData.quantity,
+        fileAttached: !!creationData.file,
+        imageAttached: !!creationData.imagePreview,
+      },
+      pricingData: {
+        weightGrams,
+        printTimeHours,
+      },
+    };
+
+    try {
+      const response = await fetch("/api/quotation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send quotation request");
+      }
+
+      // Success handled by CustomCTA state internally for visual feedback
+    } catch (err) {
+      setSubmitError("Failed to submit request. Please try again later.");
+      throw err; // Important to throw so CustomCTA knows it failed
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -57,8 +111,18 @@ export default function CustomPage() {
           onPrintTimeChange={setPrintTimeHours}
         />
 
-        {/* Section 4: Submit CTA */}
-        <CustomCTA onSubmit={handleSubmit} />
+        {/* Section 4: Customer Details */}
+        <CustomerDetails data={customerData} onChange={setCustomerData} />
+
+        {/* Error message display if any */}
+        {submitError && (
+          <div className="bg-black py-4 text-center text-red-500">
+            {submitError}
+          </div>
+        )}
+
+        {/* Section 5: Submit CTA */}
+        <CustomCTA onSubmit={handleSubmit} isSubmitting={isSubmitting} />
       </main>
 
       {/* Footer */}

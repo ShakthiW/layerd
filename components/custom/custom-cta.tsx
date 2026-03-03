@@ -5,18 +5,24 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Send, Check, Shield, Clock, MessageCircle } from "lucide-react";
 
 interface CustomCTAProps {
-  onSubmit: () => void;
+  onSubmit: () => Promise<void> | void;
+  isSubmitting?: boolean;
 }
 
-export function CustomCTA({ onSubmit }: CustomCTAProps) {
+export function CustomCTA({ onSubmit, isSubmitting }: CustomCTAProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-60px" });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleClick = () => {
-    setSubmitted(true);
-    onSubmit();
-    setTimeout(() => setSubmitted(false), 4000);
+  const handleClick = async () => {
+    try {
+      await onSubmit();
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch (e) {
+      // Error is handled in the parent component
+      setSubmitted(false);
+    }
   };
 
   const assurances = [
@@ -77,7 +83,7 @@ export function CustomCTA({ onSubmit }: CustomCTAProps) {
         >
           <button
             onClick={handleClick}
-            disabled={submitted}
+            disabled={submitted || isSubmitting}
             className="group relative inline-flex items-center gap-3 rounded-full bg-warm-gold px-10 py-4 text-sm font-semibold uppercase tracking-wider text-black transition-all duration-500 hover:bg-warm-gold-light hover:shadow-[0_0_40px_rgba(212,168,83,0.25)] disabled:opacity-70"
           >
             <AnimatePresence mode="wait">
@@ -91,6 +97,16 @@ export function CustomCTA({ onSubmit }: CustomCTAProps) {
                 >
                   <Check className="h-5 w-5" />
                   Request Sent!
+                </motion.span>
+              ) : isSubmitting ? (
+                <motion.span
+                  key="loading"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="flex items-center gap-2"
+                >
+                  Sending...
                 </motion.span>
               ) : (
                 <motion.span
