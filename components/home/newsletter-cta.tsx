@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Loader2 } from "lucide-react";
 
 export function NewsletterCTA() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -105,13 +105,18 @@ export function NewsletterCTA() {
           </div>
           <button
             type="submit"
-            disabled={submitted}
+            disabled={submitted || isLoading}
             className="flex w-full shrink-0 items-center justify-center gap-2 rounded-full bg-warm-gold px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-black transition-all duration-300 hover:bg-warm-gold-light hover:shadow-[0_0_30px_rgba(212,168,83,0.2)] disabled:opacity-70 sm:w-auto"
           >
             {submitted ? (
               <>
                 <Check className="h-4 w-4" />
                 Subscribed!
+              </>
+            ) : isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Subscribing...
               </>
             ) : (
               <>
