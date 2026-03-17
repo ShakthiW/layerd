@@ -114,9 +114,9 @@ const SlideTab = forwardRef<HTMLLIElement, SlideTabProps>(
             left: internalRef.current.offsetLeft,
           });
         }}
-        className="relative z-10 block cursor-pointer px-3 py-1.5 text-xs uppercase text-white mix-blend-difference md:px-5 md:py-3 md:text-base"
+        className="relative z-10 block cursor-pointer mix-blend-difference"
       >
-        <Link href={href}>{children}</Link>
+        <Link href={href} className="block px-3 py-1.5 text-xs uppercase text-white md:px-5 md:py-3 md:text-base">{children}</Link>
       </li>
     );
   },
