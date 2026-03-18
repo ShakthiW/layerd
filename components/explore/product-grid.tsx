@@ -90,13 +90,22 @@ export function ProductGrid({
                 <div
                   className={`relative mb-5 aspect-4/5 overflow-hidden rounded-2xl border border-white/6 bg-linear-to-br ${product.gradient} transition-all duration-700 group-hover:border-warm-gold/20 group-hover:shadow-[0_8px_40px_rgba(212,168,83,0.06)]`}
                 >
-                  {/* Geometric placeholder */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative">
-                      <div className="h-20 w-20 rounded-2xl border border-white/10 bg-white/3 transition-transform duration-700 group-hover:rotate-12 group-hover:scale-110" />
-                      <div className="absolute left-4 top-4 h-20 w-20 rounded-2xl border border-white/6 bg-white/2 transition-transform duration-700 group-hover:-rotate-6" />
+                  {product.images && product.images.length > 0 ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img 
+                      src={product.images[0]} 
+                      alt={product.name} 
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  ) : (
+                    /* Geometric placeholder */
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative">
+                        <div className="h-20 w-20 rounded-2xl border border-white/10 bg-white/3 transition-transform duration-700 group-hover:rotate-12 group-hover:scale-110" />
+                        <div className="absolute left-4 top-4 h-20 w-20 rounded-2xl border border-white/6 bg-white/2 transition-transform duration-700 group-hover:-rotate-6" />
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Quick add */}
                   <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">

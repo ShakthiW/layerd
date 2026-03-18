@@ -7,7 +7,7 @@ import { ExploreFilters } from "@/components/explore/explore-filters";
 import { ProductGrid } from "@/components/explore/product-grid";
 import { Footer } from "@/components/home/footer";
 
-export default function ExploreClient({ products }: { products: any[] }) {
+export default function ExploreClient({ products, categories }: { products: any[]; categories: any[] }) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [activeSort, setActiveSort] = useState("newest");
 
@@ -22,6 +22,7 @@ export default function ExploreClient({ products }: { products: any[] }) {
 
         {/* Section 3: Filters & Sort */}
         <ExploreFilters
+          categories={["All", ...categories.map(c => c.name)]}
           activeCategory={activeCategory}
           onCategoryChange={setActiveCategory}
           activeSort={activeSort}

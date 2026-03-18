@@ -28,6 +28,16 @@ export interface ProductVariantGroup {
   options: ProductVariantOption[];
 }
 
+export interface DbCategory {
+  _id?: string;
+  name: string;
+  slug: string;
+  order: number;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface DbProduct {
   _id?: ObjectId;
   slug: string;
@@ -139,6 +149,20 @@ export interface PricingConfig {
   materials: { id: string; label: string; description: string }[];
   finishes: { id: string; label: string; description: string }[];
   updatedAt: Date;
+}
+
+// ─────────────────────────────────────────────────────────
+// CATEGORIES
+// ─────────────────────────────────────────────────────────
+
+export async function getAllCategories(onlyActive = true): Promise<DbCategory[]> {
+  const db = await getDb();
+  const filter = onlyActive ? { isActive: true } : {};
+  return db
+    .collection<DbCategory>("categories")
+    .find(filter)
+    .sort({ order: 1 })
+    .toArray();
 }
 
 // ─────────────────────────────────────────────────────────

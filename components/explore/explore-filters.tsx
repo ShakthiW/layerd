@@ -4,15 +4,6 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ChevronDown, SlidersHorizontal } from "lucide-react";
 
-const categories = [
-  "All",
-  "Desk & Organization",
-  "Anime Inspired",
-  "F1 Designs",
-  "Interior & Lifestyle",
-  "Trending",
-  "Custom",
-];
 
 const sortOptions = [
   { label: "Newest", value: "newest" },
@@ -22,11 +13,13 @@ const sortOptions = [
 ];
 
 export function ExploreFilters({
+  categories,
   activeCategory,
   onCategoryChange,
   activeSort,
   onSortChange,
 }: {
+  categories: string[];
   activeCategory: string;
   onCategoryChange: (cat: string) => void;
   activeSort: string;

@@ -55,6 +55,8 @@ export interface Product {
   specs: ProductSpecs;
   options?: ProductOption;
   customization?: ProductCustomization;
+  images?: string[];
+  contextImages?: { url: string; location: string; description: string }[];
   lifestyleContexts: string[];
   badges?: string[];
   isNew?: boolean;

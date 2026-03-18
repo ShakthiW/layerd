@@ -11,6 +11,7 @@ import {
   FileText,
   Calculator,
   Settings,
+  Tags,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -23,6 +24,7 @@ export function AdminSidebar({ role }: AdminSidebarProps) {
   const links = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/products", label: "Products", icon: Package },
+    { href: "/admin/categories", label: "Categories", icon: Tags },
     { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
     { href: "/admin/subscribers", label: "Subscribers", icon: Users },
     { href: "/admin/content", label: "Site Content", icon: FileText },
