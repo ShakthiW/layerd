@@ -19,9 +19,17 @@ interface QuotationData {
     weightGrams: number;
     printTimeHours: number;
   };
+  fileUrl?: string | null;
 }
 
 export const getQuotationTemplate = (data: QuotationData) => {
+  const fileSection = data.fileUrl
+    ? `
+    <h3>Attached File</h3>
+    <p><a href="${data.fileUrl}" target="_blank" style="color:#d4a853;text-decoration:underline;">View / Download Attached File</a></p>
+    `
+    : "";
+
   return `
     <h2>New Custom Quote Request</h2>
     
@@ -48,6 +56,8 @@ export const getQuotationTemplate = (data: QuotationData) => {
     
     <h3>Notes</h3>
     <p>${data.creationData.notes || "N/A"}</p>
+
+    ${fileSection}
 
     <h3>Estimated Specifications (from calculator)</h3>
     <ul>

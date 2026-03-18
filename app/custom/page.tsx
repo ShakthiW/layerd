@@ -52,30 +52,42 @@ export default function CustomPage() {
     setIsSubmitting(true);
     setSubmitError(null);
 
-    const payload = {
-      customerDetails: customerData,
-      creationData: {
-        method: creationData.method,
-        description: creationData.description,
-        dimensions: creationData.dimensions,
-        notes: creationData.notes,
-        material: creationData.material,
-        finish: creationData.finish,
-        quantity: creationData.quantity,
-        fileAttached: !!creationData.file,
-        imageAttached: !!creationData.imagePreview,
-      },
-      pricingData: {
-        weightGrams,
-        printTimeHours,
-      },
-    };
+    // Build FormData so the file goes as multipart/form-data
+    const formData = new FormData();
+
+    // Attach file if present (STL or image)
+    if (creationData.file) {
+      formData.append("file", creationData.file);
+    }
+
+    // All other data as a JSON string
+    formData.append(
+      "formData",
+      JSON.stringify({
+        customerDetails: customerData,
+        creationData: {
+          method: creationData.method,
+          description: creationData.description,
+          dimensions: creationData.dimensions,
+          notes: creationData.notes,
+          material: creationData.material,
+          finish: creationData.finish,
+          quantity: creationData.quantity,
+          fileAttached: !!creationData.file,
+          imageAttached: !!creationData.imagePreview,
+        },
+        pricingData: {
+          weightGrams,
+          printTimeHours,
+        },
+      }),
+    );
 
     try {
       const response = await fetch("/api/quotation", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        // No Content-Type header — browser sets multipart boundary automatically
+        body: formData,
       });
 
       if (!response.ok) {
