@@ -15,6 +15,19 @@ export interface AdminUser {
   lastLogin: Date | null;
 }
 
+export interface ProductVariantOption {
+  label: string;
+  value: string;
+  meta?: string;
+  priceModifier?: number;
+}
+
+export interface ProductVariantGroup {
+  id: string;
+  label: string;
+  options: ProductVariantOption[];
+}
+
 export interface DbProduct {
   _id?: ObjectId;
   slug: string;
@@ -41,12 +54,13 @@ export interface DbProduct {
     finish: string;
     infill?: string;
   };
-  options?: {
-    colors?: { name: string; hex: string }[];
-    sizes?: { label: string; dimensions: string }[];
-    materials?: { name: string; description: string }[];
-    finishes?: { name: string; description: string }[];
-  };
+  images?: string[];
+  variants?: ProductVariantGroup[];
+  contextImages?: {
+    url: string;
+    location: string;
+    description: string;
+  }[];
   customization?: {
     allowCustomText?: { maxLength: number; placeholder: string };
     allowCustomImage?: boolean;

@@ -41,12 +41,16 @@ export function ProductHero({ product }: { product: Product }) {
   const activeVisual = visuals[activeVisualIdx];
 
   // ——— Options State (moved from product-options) ———
-  const [selectedColor, setSelectedColor] = useState(0);
-  const [selectedSize, setSelectedSize] = useState(0);
-  const [selectedMaterial, setSelectedMaterial] = useState(0);
-  const [selectedFinish, setSelectedFinish] = useState(0);
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, number>>({});
 
-  const opts = product.options;
+  const groups = (product as any).variants || [];
+
+  // Calculate dynamic price
+  const activePrice = groups.reduce((total: number, group: any) => {
+    const selectedIdx = selectedVariants[group.id] || 0;
+    const option = group.options[selectedIdx];
+    return total + (option?.priceModifier || 0);
+  }, product.price);
 
   return (
     <section
@@ -239,8 +243,13 @@ export function ProductHero({ product }: { product: Product }) {
                 transition={{ duration: 0.6, delay: 0.55 }}
               >
                 <span className="font-display text-3xl font-light text-warm-gold sm:text-4xl">
-                  {formatPrice(product.price)}
+                  {formatPrice(activePrice)}
                 </span>
+                {activePrice > product.price && (
+                  <span className="ml-3 text-sm text-zinc-500 line-through">
+                    {formatPrice(product.price)}
+                  </span>
+                )}
               </motion.div>
 
               <motion.p
@@ -261,136 +270,84 @@ export function ProductHero({ product }: { product: Product }) {
             />
 
             {/* ——— CONFIGURATION OPTIONS ——— */}
-            {opts && Object.keys(opts).length > 0 && (
+            {groups.length > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.6 }}
                 className="flex flex-col gap-6"
               >
-                {/* Colors */}
-                {opts.colors && (
-                  <div>
-                    <div className="mb-3 flex items-center justify-between">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
-                        Color
-                      </span>
-                      <span className="text-xs text-warm-gold">
-                        {opts.colors[selectedColor]?.name}
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      {opts.colors.map((color, i) => (
-                        <button
-                          key={color.name}
-                          onClick={() => setSelectedColor(i)}
-                          className="group/swatch relative flex items-center justify-center p-1"
-                          title={color.name}
-                        >
-                          <div
-                            className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300 ${
-                              selectedColor === i
-                                ? "border-warm-gold shadow-[0_0_16px_rgba(212,168,83,0.3)] scale-110"
-                                : "border-transparent hover:border-white/30"
-                            }`}
-                          >
-                            <div
-                              className="h-8 w-8 rounded-full border border-white/10"
-                              style={{ backgroundColor: color.hex }}
-                            />
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {groups.map((group: any) => {
+                  const sIdx = selectedVariants[group.id] || 0;
+                  const activeOpt = group.options[sIdx];
+                  const isColorMode = group.id.toLowerCase().includes("color");
 
-                <div className="grid gap-6 sm:grid-cols-2">
-                  {/* Sizes */}
-                  {opts.sizes && (
-                    <div>
+                  return (
+                    <div key={group.id}>
                       <div className="mb-3 flex items-center justify-between">
                         <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
-                          Size
+                          {group.label}
                         </span>
                         <span className="text-xs text-warm-gold">
-                          {opts.sizes[selectedSize]?.label}
+                          {activeOpt?.label}
                         </span>
                       </div>
-                      <div className="grid grid-cols-2 gap-2 mb-2">
-                        {opts.sizes.map((size, i) => (
-                          <button
-                            key={size.label}
-                            onClick={() => setSelectedSize(i)}
-                            className={`rounded-xl border px-3 py-2.5 text-center transition-all duration-300 ${
-                              selectedSize === i
-                                ? "border-warm-gold/50 bg-warm-gold/10 shadow-[0_0_16px_rgba(212,168,83,0.1)]"
-                                : "border-white/10 bg-white/2 hover:border-white/30"
-                            }`}
-                          >
-                            <span
-                              className={`block text-xs font-medium ${selectedSize === i ? "text-warm-gold" : "text-white"}`}
-                            >
-                              {size.label}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                      {opts.sizes[selectedSize]?.dimensions && (
-                        <p className="text-[11px] text-zinc-500">
-                          {opts.sizes[selectedSize].dimensions}
-                        </p>
-                      )}
-                    </div>
-                  )}
 
-                  {/* Materials or Finishes (showing Finish if Material not present, to save space, or can stack them) */}
-                  {/* Let's stack them vertically for compact UX or use select dropdowns. Radio buttons are great: */}
-                  {opts.finishes && (
-                    <div>
-                      <div className="mb-3 flex items-center justify-between">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
-                          Finish
-                        </span>
-                      </div>
-                      <div className="flex flex-col gap-2 mb-2">
-                        {opts.finishes.map((fin, i) => (
-                          <button
-                            key={fin.name}
-                            onClick={() => setSelectedFinish(i)}
-                            className={`flex w-full items-center gap-3 rounded-xl border px-4 py-2.5 text-left transition-all duration-300 ${
-                              selectedFinish === i
-                                ? "border-warm-gold/50 bg-warm-gold/10"
-                                : "border-white/10 bg-white/2 hover:border-white/30"
-                            }`}
-                          >
-                            <div
-                              className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
-                                selectedFinish === i
-                                  ? "border-warm-gold bg-warm-gold"
-                                  : "border-white/20"
+                      {isColorMode ? (
+                        <div className="flex flex-wrap gap-3">
+                          {group.options.map((opt: any, i: number) => (
+                            <button
+                              key={i}
+                              onClick={() => setSelectedVariants(p => ({ ...p, [group.id]: i }))}
+                              className="group/swatch relative flex items-center justify-center p-1"
+                              title={opt.label}
+                            >
+                              <div
+                                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300 ${
+                                  sIdx === i
+                                    ? "border-warm-gold shadow-[0_0_16px_rgba(212,168,83,0.3)] scale-110"
+                                    : "border-transparent hover:border-white/30"
+                                }`}
+                              >
+                                <div
+                                  className="h-8 w-8 rounded-full border border-white/10"
+                                  style={{ backgroundColor: opt.meta || "#ffffff" }}
+                                />
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-2 gap-2 mb-2 sm:grid-cols-3">
+                          {group.options.map((opt: any, i: number) => (
+                            <button
+                              key={i}
+                              onClick={() => setSelectedVariants(p => ({ ...p, [group.id]: i }))}
+                              className={`rounded-xl border px-3 py-2.5 text-center transition-all duration-300 flex flex-col items-center justify-center gap-1 ${
+                                sIdx === i
+                                  ? "border-warm-gold/50 bg-warm-gold/10 shadow-[0_0_16px_rgba(212,168,83,0.1)]"
+                                  : "border-white/10 bg-white/2 hover:border-white/30"
                               }`}
                             >
-                              {selectedFinish === i && (
-                                <Check className="h-2.5 w-2.5 text-black" />
+                              <span className={`block text-xs font-medium ${sIdx === i ? "text-warm-gold" : "text-white"}`}>
+                                {opt.label}
+                              </span>
+                              {opt.priceModifier > 0 && (
+                                <span className="text-[10px] text-zinc-500">+{formatPrice(opt.priceModifier).replace('LKR','').trim()}</span>
                               )}
-                            </div>
-                            <span
-                              className={`text-xs font-medium ${selectedFinish === i ? "text-warm-gold" : "text-white"}`}
-                            >
-                              {fin.name}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                      {opts.finishes[selectedFinish]?.description && (
-                        <p className="text-[11px] text-zinc-500">
-                          {opts.finishes[selectedFinish].description}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {!isColorMode && activeOpt?.meta && (
+                        <p className="text-[11px] text-zinc-500 mt-2">
+                          <span className="text-zinc-400">Selected Meta:</span> {activeOpt.meta}
                         </p>
                       )}
                     </div>
-                  )}
-                </div>
+                  );
+                })}
               </motion.div>
             )}
 
