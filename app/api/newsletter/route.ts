@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { transporter, mailOptions } from "@/lib/email/transporter";
 import { getNewsletterTemplate } from "@/lib/email/templates/newsletter";
+import { addSubscriber } from "@/lib/db-helpers";
 
 export async function POST(req: Request) {
   try {
@@ -15,12 +16,16 @@ export async function POST(req: Request) {
 
     const htmlContent = getNewsletterTemplate();
 
-    await transporter.sendMail({
-      ...mailOptions,
-      to: email,
-      subject: "Welcome to the Layerd Journey",
-      html: htmlContent,
-    });
+    // Store subscriber in DB and send welcome email in parallel
+    await Promise.all([
+      addSubscriber(email),
+      transporter.sendMail({
+        ...mailOptions,
+        to: email,
+        subject: "Welcome to the Layerd Journey",
+        html: htmlContent,
+      }),
+    ]);
 
     return NextResponse.json(
       { message: "Subscription successful" },

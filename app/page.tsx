@@ -7,21 +7,39 @@ import { SocialProof } from "@/components/home/social-proof";
 import { NewsletterCTA } from "@/components/home/newsletter-cta";
 import { Footer } from "@/components/home/footer";
 
-export default function Home() {
+import { getAllProducts, getSiteContent } from "@/lib/db-helpers";
+
+export default async function Home() {
+  const products = await getAllProducts();
+  // Safe serialization for Client Components
+  const serializedProducts = JSON.parse(JSON.stringify(products));
+
+  const contentArray = await getSiteContent("home");
+  const content = contentArray.reduce((acc, curr) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {} as Record<string, any>);
+
   return (
     <div className="grain-overlay">
       <main>
         {/* Section 1: Cinematic Hero */}
-        <HeroSection />
+        <HeroSection 
+          headline={content.hero_headline} 
+          subheadline={content.hero_subheadline} 
+        />
 
         {/* Section 2: Brand Story */}
-        <BrandStory />
+        <BrandStory 
+          headline={content.brand_story_headline}
+          body={content.brand_story_body}
+        />
 
         {/* Section 3: Product Categories */}
         <CategoryGrid />
 
         {/* Section 4: Featured Products */}
-        <FeaturedProducts />
+        <FeaturedProducts products={serializedProducts} />
 
         {/* Section 5: The Process */}
         <ProcessSection />

@@ -4,12 +4,14 @@ import { useRef, useMemo, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { ShoppingBag, Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { allProducts, formatPrice } from "@/lib/products";
+import { formatPrice } from "@/lib/products";
 
 export function ProductGrid({
+  products: allProducts,
   activeCategory,
   activeSort,
 }: {
+  products: any[];
   activeCategory: string;
   activeSort: string;
 }) {

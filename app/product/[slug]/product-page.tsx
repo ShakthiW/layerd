@@ -10,7 +10,13 @@ import { ProductReviews } from "@/components/product/product-reviews";
 import { ProductRelated } from "@/components/product/product-related";
 import { Footer } from "@/components/home/footer";
 
-export function ProductPage({ product }: { product: Product }) {
+export function ProductPage({ 
+  product, 
+  relatedProducts 
+}: { 
+  product: Product;
+  relatedProducts: Product[];
+}) {
   return (
     <div className="grain-overlay">
       <main>
@@ -33,7 +39,7 @@ export function ProductPage({ product }: { product: Product }) {
         <ProductReviews product={product} />
 
         {/* Section 8: Related Products — "Continue Exploring" */}
-        <ProductRelated product={product} />
+        <ProductRelated product={product} relatedProducts={relatedProducts} />
       </main>
 
       {/* Footer */}

@@ -3,7 +3,13 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-export function BrandStory() {
+export function BrandStory({
+  headline = "Our Craft",
+  body = "We bridge the worlds of technology and art, using state-of-the-art 3D printing to craft products that transform everyday spaces into extraordinary experiences.",
+}: {
+  headline?: string;
+  body?: string;
+}) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
@@ -41,7 +47,7 @@ export function BrandStory() {
             >
               <span className="h-px w-12 bg-warm-gold/50" />
               <span className="text-xs font-medium uppercase tracking-[0.3em] text-warm-gold/70">
-                Our Craft
+                {headline}
               </span>
             </motion.div>
 
@@ -76,9 +82,7 @@ export function BrandStory() {
               transition={{ delay: 1.6, duration: 0.8 }}
               className="max-w-md text-base leading-relaxed text-zinc-400"
             >
-              We bridge the worlds of technology and art, using state-of-the-art
-              3D printing to craft products that transform everyday spaces into
-              extraordinary experiences.
+              {body}
             </motion.p>
           </div>
 

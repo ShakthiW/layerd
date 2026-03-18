@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { getProductBySlug, getAllSlugs } from "@/lib/products";
+import { getProductBySlug, getAllProducts, getRelatedProducts } from "@/lib/db-helpers";
 import { ProductPage } from "./product-page";
 
 interface ProductPageProps {
@@ -11,8 +11,8 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
-  if (!product) {
+  const product = await getProductBySlug(slug);
+  if (!product || !product.isActive) {
     return { title: "Product Not Found — LAYERD" };
   }
   return {
@@ -21,17 +21,23 @@ export async function generateMetadata({
   };
 }
 
-export function generateStaticParams() {
-  return getAllSlugs().map((slug) => ({ slug }));
+export async function generateStaticParams() {
+  const products = await getAllProducts(true);
+  return products.map((p) => ({ slug: p.slug }));
 }
 
 export default async function ProductPageRoute({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
 
-  if (!product) {
+  if (!product || !product.isActive) {
     notFound();
   }
 
-  return <ProductPage product={product} />;
+  const related = await getRelatedProducts(product.relatedSlugs || []);
+
+  const serializedProduct = JSON.parse(JSON.stringify(product));
+  const serializedRelated = JSON.parse(JSON.stringify(related));
+
+  return <ProductPage product={serializedProduct} relatedProducts={serializedRelated} />;
 }

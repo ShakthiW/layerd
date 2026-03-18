@@ -4,7 +4,13 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
-export function HeroSection() {
+export function HeroSection({
+  headline = "Where Imagination Takes Form",
+  subheadline = "Sri Lanka's first premium 3D printed lifestyle brand. Every layer tells a story. Every print is a masterpiece.",
+}: {
+  headline?: string;
+  subheadline?: string;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -93,7 +99,7 @@ export function HeroSection() {
           transition={{ delay: 1.4, duration: 1 }}
           className="text-shimmer font-display text-xl font-light italic sm:text-2xl md:text-3xl"
         >
-          Where Imagination Takes Form
+          {headline}
         </motion.p>
 
         {/* Subtitle */}
@@ -103,9 +109,7 @@ export function HeroSection() {
           transition={{ delay: 1.8, duration: 1 }}
           className="max-w-md text-sm leading-relaxed text-zinc-400 sm:text-base"
         >
-          Sri Lanka&apos;s first premium 3D printed lifestyle brand.
-          <br />
-          Every layer tells a story. Every print is a masterpiece.
+          {subheadline}
         </motion.p>
 
         {/* CTA */}

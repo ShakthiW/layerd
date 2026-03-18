@@ -4,14 +4,19 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { Product, getRelatedProducts, formatPrice } from "@/lib/products";
+import { Product, formatPrice } from "@/lib/products";
 
-export function ProductRelated({ product }: { product: Product }) {
+export function ProductRelated({ 
+  product, 
+  relatedProducts 
+}: { 
+  product: Product;
+  relatedProducts: Product[];
+}) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-60px" });
 
-  const related = getRelatedProducts(product);
-  if (related.length === 0) return null;
+  if (relatedProducts.length === 0) return null;
 
   return (
     <section
@@ -64,7 +69,7 @@ export function ProductRelated({ product }: { product: Product }) {
 
         {/* Related products grid */}
         <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-          {related.map((item, i) => (
+          {relatedProducts.map((item, i) => (
             <motion.div
               key={item.slug}
               initial={{ opacity: 0, y: 40 }}

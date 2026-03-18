@@ -4,11 +4,10 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { allProducts, formatPrice } from "@/lib/products";
+import { formatPrice } from "@/lib/products";
 
-const products = allProducts.slice(0, 4);
-
-export function FeaturedProducts() {
+export function FeaturedProducts({ products: allProducts }: { products: any[] }) {
+  const products = allProducts.slice(0, 4);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
 
