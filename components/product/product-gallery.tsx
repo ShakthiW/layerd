@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { MapPin } from "lucide-react";
+import { MapPin, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
 import { Product } from "@/lib/products";
 
 const contextIcons = ["🏠", "💻", "☕", "🎨", "🎮", "📚", "🌿", "🎵"];
@@ -57,52 +58,99 @@ export function ProductGallery({ product }: { product: Product }) {
 
         {/* Context cards — horizontal scroll on mobile, grid on desktop */}
         <div className="scrollbar-hide -mx-6 flex gap-5 overflow-x-auto px-6 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-4">
-          {product.lifestyleContexts.map((context, i) => (
-            <motion.div
-              key={context}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                delay: 0.25 + i * 0.1,
-                duration: 0.6,
-                ease: [0.215, 0.61, 0.355, 1],
-              }}
-              className="group shrink-0 cursor-pointer md:shrink"
-            >
-              <div className="relative aspect-3/4 w-64 overflow-hidden rounded-2xl border border-white/6 bg-linear-to-b from-white/4 to-transparent transition-all duration-500 group-hover:border-warm-gold/20 group-hover:shadow-[0_8px_40px_rgba(212,168,83,0.06)] md:w-full">
-                {/* Background gradient variation per card */}
-                <div
-                  className={`absolute inset-0 bg-linear-to-br ${product.gradient} opacity-60`}
-                />
+          {(product.contextImages && product.contextImages.length > 0) ? (
+            product.contextImages.map((ctx, i) => (
+              <motion.div
+                key={ctx.url + i}
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  delay: 0.25 + i * 0.1,
+                  duration: 0.6,
+                  ease: [0.215, 0.61, 0.355, 1],
+                }}
+                className="group shrink-0 cursor-pointer md:shrink"
+              >
+                <div className="relative aspect-3/4 w-64 overflow-hidden rounded-2xl border border-white/6 bg-zinc-900 transition-all duration-500 group-hover:border-warm-gold/20 group-hover:shadow-[0_8px_40px_rgba(212,168,83,0.06)] md:w-full">
+                  {/* Actual Firebase Image */}
+                  <Image
+                    src={ctx.url}
+                    alt={ctx.description || "Product Context"}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
+                  />
 
-                {/* Subtle geometric elements */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                  <div className="h-24 w-24 rounded-2xl border border-white/10 transition-transform duration-700 group-hover:rotate-12 group-hover:scale-110" />
-                </div>
-
-                {/* Context icon */}
-                <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl border border-white/8 bg-white/5 text-lg backdrop-blur-sm">
-                  {contextIcons[i % contextIcons.length]}
-                </div>
-
-                {/* Context text overlay */}
-                <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-5 pt-16">
-                  <div className="mb-2 flex items-center gap-1.5">
-                    <MapPin className="h-3 w-3 text-warm-gold/60" />
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-warm-gold/60">
-                      Context {i + 1}
-                    </span>
+                  {/* Icon */}
+                  <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl border border-white/8 bg-black/40 text-lg backdrop-blur-md z-10">
+                    {contextIcons[i % contextIcons.length]}
                   </div>
-                  <p className="text-sm font-medium leading-snug text-white">
-                    {context}
-                  </p>
-                </div>
 
-                {/* Hover glow */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,168,83,0.06)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              </div>
-            </motion.div>
-          ))}
+                  {/* Context text overlay */}
+                  <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black via-black/40 to-transparent p-5 pt-20 z-10">
+                    <div className="mb-2 flex items-center gap-1.5">
+                      <MapPin className="h-3 w-3 text-warm-gold" />
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-warm-gold">
+                        {ctx.location || "On Display"}
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium leading-snug text-white">
+                      {ctx.description}
+                    </p>
+                  </div>
+
+                  {/* Hover glow */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,168,83,0.1)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                </div>
+              </motion.div>
+            ))
+          ) : (
+            product.lifestyleContexts.map((context, i) => (
+              <motion.div
+                key={context}
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  delay: 0.25 + i * 0.1,
+                  duration: 0.6,
+                  ease: [0.215, 0.61, 0.355, 1],
+                }}
+                className="group shrink-0 cursor-pointer md:shrink"
+              >
+                <div className="relative aspect-3/4 w-64 overflow-hidden rounded-2xl border border-white/6 bg-linear-to-b from-white/4 to-transparent transition-all duration-500 group-hover:border-warm-gold/20 group-hover:shadow-[0_8px_40px_rgba(212,168,83,0.06)] md:w-full">
+                  {/* Background gradient variation per card */}
+                  <div
+                    className={`absolute inset-0 bg-linear-to-br ${product.gradient} opacity-60`}
+                  />
+
+                  {/* Subtle geometric elements */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                    <div className="h-24 w-24 rounded-2xl border border-white/10 transition-transform duration-700 group-hover:rotate-12 group-hover:scale-110" />
+                  </div>
+
+                  {/* Context icon */}
+                  <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl border border-white/8 bg-white/5 text-lg backdrop-blur-sm">
+                    {contextIcons[i % contextIcons.length]}
+                  </div>
+
+                  {/* Context text overlay */}
+                  <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-5 pt-16">
+                    <div className="mb-2 flex items-center gap-1.5">
+                      <MapPin className="h-3 w-3 text-warm-gold/60" />
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-warm-gold/60">
+                        Context {i + 1}
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium leading-snug text-white">
+                      {context}
+                    </p>
+                  </div>
+
+                  {/* Hover glow */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,168,83,0.06)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                </div>
+              </motion.div>
+            ))
+          )}
         </div>
       </div>
     </section>

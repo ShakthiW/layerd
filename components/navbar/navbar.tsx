@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ShoppingBag, User } from "lucide-react";
 
 import { SlideTabs } from "./slide-tabs";
@@ -15,6 +16,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function Navbar() {
+  const pathname = usePathname();
+
+  // Do not render navbar on admin pages
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <nav className="sticky top-0 z-50 w-full px-4 py-3 md:px-8 bg-black/60 backdrop-blur-xl border-b border-white/4">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
